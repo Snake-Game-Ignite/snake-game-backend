@@ -67,4 +67,14 @@ public class SnakeGame {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public void setAppleEaten(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isAppleEaten() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

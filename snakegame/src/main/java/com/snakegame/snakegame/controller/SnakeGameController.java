@@ -39,7 +39,7 @@ public class SnakeGameController {
             @RequestParam String playerId,
             Model model) {
         SnakeGame snakeGame = snakeGameService.getGameState(playerId);
-        snakeGameService.moveSnake(snakeGame, direction);
+        snakeGameService.moveSnake(snakeGame, direction, playerId);
         model.addAttribute("playerId", playerId);
 
         return "redirect:/snake?playerId=" + playerId;
