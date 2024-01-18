@@ -1,63 +1,42 @@
 package com.snakegame.snakegame.model;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class SnakeGame {
-    private Map<String, LinkedList<Cell>> snakes; // Map of player IDs to their respective snakes
-    private Map<String, Cell> apples; // Map of player IDs to their respective apples
-    private Direction defaultDirection; // Default direction for new players
-    private char[][] board; // Representation of the game board
-    private boolean isGameOver;
+    private boolean gameOver;
     private String message;
-
-    // Constructors, getters, and setters...
+    private Map<String, LinkedList<Cell>> snakes;
+    private ArrayList<Cell> fruits;
+    private boolean isFruitEaten;
+    private int[][] board;
 
     public SnakeGame(int boardSize) {
         this.snakes = new HashMap<>();
-        this.apples = new HashMap<>();
-        this.defaultDirection = Direction.UP;
-        this.board = new char[boardSize][boardSize];
-        this.isGameOver = false;
-        this.message = "Game in progress";
-        initializeBoard();
+        this.fruits = new ArrayList<>();
+        this.gameOver = false;
+        this.message = "";
+        this.isFruitEaten = false;
+        this.board = new int[boardSize][boardSize];
     }
 
-    private void initializeBoard() {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                board[i][j] = ' '; // Initialize all cells as empty
-            }
-        }
-    }
-
-    public Map<String, LinkedList<Cell>> getSnakes() {
-        return snakes;
-    }
-
-    public Map<String, Cell> getApples() {
-        return apples;
-    }
-
-    public Direction getDefaultDirection() {
-        return defaultDirection;
-    }
-
-    public void setDefaultDirection(Direction defaultDirection) {
-        this.defaultDirection = defaultDirection;
-    }
-
-    public char[][] getBoard() {
+    public int[][] getBoard() {
         return board;
     }
 
+    public void setBoard(int[][] board) {
+        this.board = board;
+    }
+
     public boolean isGameOver() {
-        return isGameOver;
+        return gameOver;
     }
 
     public void setGameOver(boolean gameOver) {
-        isGameOver = gameOver;
+        this.gameOver = gameOver;
     }
 
     public String getMessage() {
@@ -67,4 +46,21 @@ public class SnakeGame {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public Map<String, LinkedList<Cell>> getSnakes() {
+        return snakes;
+    }
+
+    public List<Cell> getFruits() {
+        return fruits;
+    }
+
+    public boolean isFruitEaten() {
+        return isFruitEaten;
+    }
+
+    public void setFruitEaten(boolean fruitEaten) {
+        isFruitEaten = fruitEaten;
+    }
+
 }
