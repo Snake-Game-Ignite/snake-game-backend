@@ -1,4 +1,3 @@
-
 package com.snakegame.snakegame.service;
 
 import org.springframework.stereotype.Service;
@@ -6,10 +5,8 @@ import org.springframework.stereotype.Service;
 import com.snakegame.snakegame.model.Cell;
 import com.snakegame.snakegame.model.SnakeGame;
 
-import com.snakegame.snakegame.model.Direction;
-
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Collection;
@@ -17,63 +14,82 @@ import java.util.Collection;
 @Service
 public class SnakeGameService {
 
-    private static final int BOARD_SIZE = 4;
+    private int boardSize = 6;
 
-    protected final int[][] board = new int[BOARD_SIZE][BOARD_SIZE];
+    protected final int[][] board = new int[boardSize][boardSize];
 
     private static final int INITIAL_SNAKE_LENGTH = 3;
 
-    private Map<String, SnakeGame> playerGames = new HashMap<>();
+    private SnakeGame gameState = new SnakeGame(boardSize);
 
-    public SnakeGame getGameState(String playerId) {
-        return playerGames.computeIfAbsent(playerId, this::initializeGame);
+    public int getBoardSize() {
+        return boardSize;
     }
 
-    private SnakeGame initializeGame(String playerId) {
-        SnakeGame snakeGame = new SnakeGame(BOARD_SIZE);
+    public void setBoardSize(int boardSize) {
+        this.boardSize = boardSize;
 
-        // Initialize the game state for the specific player
-        LinkedList<Cell> initialSnake = generateInitialSnake(snakeGame.getSnakes().values());
-        snakeGame.getSnakes().put(playerId, initialSnake);
-        generateNewFruit(snakeGame, board);
-
-        return snakeGame;
     }
 
-    private LinkedList<Cell> generateInitialSnake(Collection<LinkedList<Cell>> existingSnakes) {
-        LinkedList<Cell> initialSnake = new LinkedList<>();
+    public SnakeGame getGameStateForPlayer(String playerId) {
+        // if there is no snake for that player then we add one.
+        if (!gameState.getSnakes().containsKey(playerId))
+            return initializeGame(playerId, gameState);
+        return gameState;
+    }
+
+    public SnakeGame getGameState() {
+        // if there is no snake for that player then we add one.
+
+        return gameState;
+    }
+
+    private SnakeGame initializeGame(String playerId, SnakeGame gameState) {
+        // Generate snake for that player.
+        LinkedList<Cell> initialSnake = generateSnake(gameState.getSnakes().values(), gameState.getFruits());
+        gameState.getSnakes().put(playerId, initialSnake);
+        // If no fruits generate a fruit in the game.
+        if (gameState.getFruits().isEmpty())
+            generateNewFruit(gameState, board);
+
+        return gameState;
+    }
+
+    private LinkedList<Cell> generateSnake(Collection<LinkedList<Cell>> existingSnakes, List<Cell> fruits) {
+        LinkedList<Cell> snake = new LinkedList<>();
         Random random = new Random();
 
         // Generate a random initial position for the player's snake
-        int initialX = random.nextInt(BOARD_SIZE - 1);
-        int initialY = random.nextInt(BOARD_SIZE - 1);
+        int initialX = random.nextInt(boardSize - 1);
+        int initialY = random.nextInt(boardSize - 1);
 
         // Ensure that the initial position is not occupied by any existing snake
-        while (isSnakeOccupyingPosition(initialX, initialY, existingSnakes)) {
-            initialX = random.nextInt(BOARD_SIZE - 1);
-            initialY = random.nextInt(BOARD_SIZE - 1);
+        while (isSnakeOccupyingPosition(initialX, initialY, existingSnakes, fruits)) {
+            initialX = random.nextInt(boardSize - 1);
+            initialY = random.nextInt(boardSize - 1);
         }
 
         // Generate the initial snake
         for (int i = 0; i < INITIAL_SNAKE_LENGTH; i++) {
-            initialSnake.add(new Cell(initialX, initialY + i));
+            snake.add(new Cell(initialX, initialY + i));
         }
 
-        return initialSnake;
+        return snake;
     }
 
-    private boolean isSnakeOccupyingPosition(int x, int y, Collection<LinkedList<Cell>> snakes) {
-        for (LinkedList<Cell> snake : snakes) {
-            if (snake.stream().anyMatch(cell -> cell.getX() == x && cell.getY() == y)) {
+    private boolean isSnakeOccupyingPosition(int x, int y, Collection<LinkedList<Cell>> existingSnakes,
+            List<Cell> fruits) {
+        for (LinkedList<Cell> existingSnake : existingSnakes) {
+            if (existingSnake.stream().anyMatch(cell -> cell.getX() == x && cell.getY() == y)) {
                 return true; // Position is occupied by an existing snake
             }
         }
-        return false; // Position is not occupied
+        return fruits.contains(new Cell(x, y)); // Also check if its occupying a fruit.
     }
 
-    public void handleUserInput(String playerId, String direction) {
+    public void handleUserInput(String playerId, int direction) {
         // creates a game state for the user if it doesn't already exist
-        SnakeGame snakeGame = getGameState(playerId);
+        SnakeGame snakeGame = getGameStateForPlayer(playerId);
         if (!snakeGame.isGameOver()) {
             moveSnake(snakeGame, playerId, direction);
             checkCollision(snakeGame, playerId);
@@ -82,7 +98,7 @@ public class SnakeGameService {
         }
     }
 
-    private void moveSnake(SnakeGame snakeGame, String playerId, String direction) {
+    private void moveSnake(SnakeGame snakeGame, String playerId, int direction) {
 
         LinkedList<Cell> snake = snakeGame.getSnakes().get(playerId);
 
@@ -91,28 +107,31 @@ public class SnakeGameService {
             Cell head = snake.getFirst();
 
             // Calculate the new head position based on the current direction
+            // x is vertical and y is horizontal
             Cell newHead;
-            switch (Direction.valueOf(direction.toUpperCase())) {
-                case UP:
-                    newHead = new Cell(head.getX() - 1, head.getY());
+            switch (direction) {
+                case 0:
+                    newHead = new Cell(head.getX() - 1, head.getY()); // UP
                     break;
-                case DOWN:
-                    newHead = new Cell(head.getX() + 1, head.getY());
+                case 2:
+                    newHead = new Cell(head.getX() + 1, head.getY()); // Down
                     break;
-                case LEFT:
-                    newHead = new Cell(head.getX(), head.getY() - 1);
+                case 3:
+                    newHead = new Cell(head.getX(), head.getY() - 1); // Left
                     break;
-                case RIGHT:
-                    newHead = new Cell(head.getX(), head.getY() + 1);
+                case 1:
+                    newHead = new Cell(head.getX(), head.getY() + 1); // Right
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + direction);
+                    throw new IllegalStateException("Unexpected value: " + direction); // maybe better message?
             }
 
             // Move the snake by adding the new head
             snake.addFirst(newHead);
             if (!snakeGame.isFruitEaten()) {
                 snake.removeLast();
+            } else {
+                snakeGame.addScoreForPlayer(playerId);
             }
 
         }
@@ -123,7 +142,7 @@ public class SnakeGameService {
         Cell head = snake.getFirst();
 
         // Check for collisions with the board boundaries
-        if (head.getX() < 0 || head.getX() >= BOARD_SIZE || head.getY() < 0 || head.getY() >= BOARD_SIZE) {
+        if (head.getX() < 0 || head.getX() >= boardSize || head.getY() < 0 || head.getY() >= boardSize) {
             endGame(snakeGame, "Game Over for " + playerId + " - Snake collided with the board boundary!");
         }
 
@@ -199,7 +218,7 @@ public class SnakeGameService {
     }
 
     private void generateNewFruit(SnakeGame snakeGame, int[][] board) {
-        int boardSize = BOARD_SIZE;
+
         Random random = new Random();
 
         int fruitX;

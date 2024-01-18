@@ -1,9 +1,9 @@
 package com.snakegame.snakegame.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,27 +16,34 @@ import com.snakegame.snakegame.service.SnakeGameService;
 @RequestMapping("/api/snake")
 public class SnakeGameController {
 
-    private final SnakeGameService snakeGameService;
+    private SnakeGameService snakeGameService;
 
     public SnakeGameController(SnakeGameService snakeGameService) {
         this.snakeGameService = snakeGameService;
 
     }
 
-    @GetMapping("/gameStatus/{playerId}")
-    public ResponseEntity<SnakeGame> snakeGame(@PathVariable String playerId) {
-        SnakeGame updatedGameState = snakeGameService.getGameState(playerId);
+    @GetMapping("/state")
+    public ResponseEntity<SnakeGame> snakeGame() {
+        SnakeGame updatedGameState = snakeGameService.getGameState();
         return ResponseEntity.ok(updatedGameState);
     }
 
-    @PostMapping("/move/{playerId}/{direction}")
-    public ResponseEntity<SnakeGame> moveSnake(@PathVariable String playerId, @PathVariable String direction) {
-        snakeGameService.handleUserInput(playerId, direction);
-        SnakeGame updatedGameState = snakeGameService.getGameState(playerId);
-
-        // Create DTO for fruits, snakes = [player id etc]
-
+    @GetMapping("/reset")
+    public ResponseEntity<SnakeGame> reset() {
+        snakeGameService = new SnakeGameService();
+        SnakeGame updatedGameState = snakeGameService.getGameState();
         return ResponseEntity.ok(updatedGameState);
+    }
+
+    @PostMapping("/move")
+    public ResponseEntity<SnakeGame> moveSnake(@RequestBody MoveRequest moveRequest) {
+        String playerId = moveRequest.getPlayerId();
+        int direction = moveRequest.getDirection();
+        snakeGameService.handleUserInput(playerId, direction);
+        SnakeGame updatedGameState = snakeGameService.getGameStateForPlayer(playerId);
+
+        return new ResponseEntity<>(updatedGameState, HttpStatus.OK);
     }
 
 }
