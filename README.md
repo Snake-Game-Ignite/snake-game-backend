@@ -12,3 +12,15 @@ For the calls:
    - http://localhost:8080/api/snake/state
 4. reset
    - http://localhost:8080/api/snake/reset
+   
+
+
+   
+For the websocket
+
+1) connect websocket to ws://localhost:8080/ws
+
+To test:
+http://localhost:8080/ in your local browser opens a webpage
+to test the current websocket implementation
+   
