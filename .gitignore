@@ -28,6 +28,6 @@ replay_pid*
 target/
 bin/
 .settings/
-.classpath
-.proect
-.factorypath
+**/.classpath
+**/.proect
+**/.factorypath
