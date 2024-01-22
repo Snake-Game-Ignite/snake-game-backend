@@ -8,6 +8,7 @@ function connect() {
 	};
 	
 	ws.onmessage = function(data){
+		console.log("received:"+data)
 		showGreeting(data.data);
 	}
 	
@@ -53,6 +54,11 @@ function sendName() {
     ws.send($("#name").val());
 }
 
+function sendMoveRight() {
+    ws.send( '{"playerId": "player1", "direction":0}'  );
+}
+
+
 function showGreeting(message) {
     $("#greetings").append(" " + message + "");
 }
@@ -61,5 +67,5 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#connect" ).click(() => connect());
     $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendName());
+    $( "#send" ).click(() => sendMoveRight());
 });

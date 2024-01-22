@@ -22,15 +22,16 @@ public class SnakeGameWebSocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
+			webSocket.received(message.getPayload());
 			// Map value = new Gson().fromJson(message.getPayload(), Map.class);
-			String name=message.getPayload();
-			webSocket.broadcast("Hello %s".formatted(name));
+		//	String name=message.getPayload();
+		//	webSocket.broadcast("Hello %s".formatted(name));
 	}
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		System.out.println("Client connection request.....");
-		webSocket.addSession(session);
+		webSocket.connect(session);
 	}
 	
 }
