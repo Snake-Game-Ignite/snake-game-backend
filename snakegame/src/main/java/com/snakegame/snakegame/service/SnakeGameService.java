@@ -111,16 +111,16 @@ public class SnakeGameService {
             Cell newHead;
             switch (direction) {
                 case 0:
-                    newHead = new Cell(head.getX() - 1, head.getY()); // UP
+                    newHead = new Cell(head.getX() - 1, head.getY()); // LEFT
                     break;
                 case 2:
-                    newHead = new Cell(head.getX() + 1, head.getY()); // Down
+                    newHead = new Cell(head.getX() + 1, head.getY()); // RIGHT
                     break;
                 case 3:
-                    newHead = new Cell(head.getX(), head.getY() - 1); // Left
+                    newHead = new Cell(head.getX(), head.getY() - 1); // UP
                     break;
                 case 1:
-                    newHead = new Cell(head.getX(), head.getY() + 1); // Right
+                    newHead = new Cell(head.getX(), head.getY() + 1); // DOWN
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + direction); // maybe better message?

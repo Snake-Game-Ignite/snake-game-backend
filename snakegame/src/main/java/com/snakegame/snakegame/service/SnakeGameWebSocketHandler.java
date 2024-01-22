@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -33,5 +34,12 @@ public class SnakeGameWebSocketHandler extends TextWebSocketHandler {
 		System.out.println("Client connection request.....");
 		webSocket.connect(session);
 	}
+
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		webSocket.disconnect(session);
+	}
+	
+	
 	
 }

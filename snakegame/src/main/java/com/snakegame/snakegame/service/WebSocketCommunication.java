@@ -67,5 +67,10 @@ public class WebSocketCommunication {
         gameService.handleUserInput(playerId, direction);
         broadcast( gameService.getGameState());	
 	}
+
+	public void disconnect(WebSocketSession session) {
+		sessions.remove(session);
+		
+	}
 	
 }

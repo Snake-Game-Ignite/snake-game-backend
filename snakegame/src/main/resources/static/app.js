@@ -1,3 +1,6 @@
+let tileSize=32
+let boardSize=6
+
 function connect() {
 	ws = new WebSocket('ws://localhost:8080/ws');
 	
@@ -7,9 +10,11 @@ function connect() {
 	//	  socket.send("My name is John");
 	};
 	
-	ws.onmessage = function(data){
-		console.log("received:"+data)
-		showGreeting(data.data);
+	ws.onmessage = function(event){
+		console.log("received:"+event.data)
+		showGreeting(event.data);
+
+		drawPlayfield(JSON.parse(event.data))
 	}
 	
 	ws.onclose = function(event) {
@@ -54,8 +59,46 @@ function sendName() {
     ws.send($("#name").val());
 }
 
-function sendMoveRight() {
+function clearPlayfield() {
+	var  can=document.getElementById("playfield");
+	var ctx=can.getContext("2d");
+	ctx.clearRect(0,0,192,192);
+}
+
+function drawPlayfield(gamestate) {
+	clearPlayfield();
+
+	var  can=document.getElementById("playfield");
+	var ctx=can.getContext("2d");
+	
+	var player1=gamestate.snakes['player1']
+	ctx.fillStyle="rgba(150,255,60,0.8)";
+	player1.forEach( p => {
+		ctx.fillRect(p.x*tileSize,p.y*tileSize,tileSize,tileSize)
+	})
+
+	var fruits=gamestate.fruits
+	ctx.fillStyle="rgba(255,40,80,0.4)";
+	fruits.forEach( p => {
+		ctx.fillRect(p.x*tileSize,p.y*tileSize,tileSize,tileSize)
+	})
+	
+}
+
+function sendMoveLeft() {
     ws.send( '{"playerId": "player1", "direction":0}'  );
+}
+
+function sendMoveRight() {
+    ws.send( '{"playerId": "player1", "direction":2}'  );
+}
+
+function sendMoveUp() {
+    ws.send( '{"playerId": "player1", "direction":3}'  );
+}
+
+function sendMoveDown() {
+    ws.send( '{"playerId": "player1", "direction":1}'  );
 }
 
 
@@ -67,5 +110,9 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#connect" ).click(() => connect());
     $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendMoveRight());
+    $( "#left" ).click(() => sendMoveLeft());
+    $( "#right" ).click(() => sendMoveRight());
+    $( "#up" ).click(() => sendMoveUp());
+    $( "#down" ).click(() => sendMoveDown());
+
 });
