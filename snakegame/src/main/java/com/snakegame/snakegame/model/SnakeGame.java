@@ -14,7 +14,7 @@ public class SnakeGame {
     private ArrayList<Cell> fruits;
     private boolean isFruitEaten;
     private int[][] board;
-    private Map<String, Integer> score;
+    private Map<String, Integer> score = new HashMap<>();
 
     public SnakeGame(int boardSize) {
         this.snakes = new HashMap<>();
@@ -78,6 +78,10 @@ public class SnakeGame {
 
     public void setFruitEaten(boolean fruitEaten) {
         isFruitEaten = fruitEaten;
+    }
+
+    public Map<String, Integer> getScore() {
+        return score;
     }
 
 }

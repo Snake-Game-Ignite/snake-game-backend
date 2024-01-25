@@ -44,6 +44,11 @@ public class SnakeGameService {
         return gameState;
     }
 
+    public SnakeGame resetGameState() {
+        this.gameState = new SnakeGame(boardSize);
+        return gameState;
+    }
+
     private SnakeGame initializeGame(String playerId, SnakeGame gameState) {
         // Generate snake for that player.
         LinkedList<Cell> initialSnake = generateSnake(gameState.getSnakes().values(), gameState.getFruits());
@@ -93,7 +98,7 @@ public class SnakeGameService {
         if (!snakeGame.isGameOver()) {
             moveSnake(snakeGame, playerId, direction);
             checkCollision(snakeGame, playerId);
-            checkFruit(snakeGame, board);
+            checkFruit(snakeGame, board, playerId);
             updateBoard(snakeGame);
         }
     }
@@ -108,6 +113,7 @@ public class SnakeGameService {
 
             // Calculate the new head position based on the current direction
             // x is vertical and y is horizontal
+
             Cell newHead;
             switch (direction) {
                 case 0:
@@ -128,12 +134,7 @@ public class SnakeGameService {
 
             // Move the snake by adding the new head
             snake.addFirst(newHead);
-            if (!snakeGame.isFruitEaten()) {
-                snake.removeLast();
-            } else {
-                snakeGame.addScoreForPlayer(playerId);
-            }
-
+            snake.removeLast();
         }
     }
 
@@ -210,15 +211,23 @@ public class SnakeGameService {
         }
     }
 
-    private void checkFruit(SnakeGame snakeGame, int[][] board) {
+    private void checkFruit(SnakeGame snakeGame, int[][] board, String playerId) {
+        LinkedList<Cell> snake = snakeGame.getSnakes().get(playerId);
+        Cell head = snake.getFirst();
+        if (snakeGame.getFruits().removeIf(fruit -> head.getX() == fruit.getX() && head.getY() == fruit.getY())) {
+            snakeGame.addScoreForPlayer(playerId);
+            snakeGame.setFruitEaten(true);
+        }
+
         if (snakeGame.isFruitEaten()) {
             // Fruit has been eaten, generate a new one
             generateNewFruit(snakeGame, board);
+            snakeGame.setFruitEaten(false);
         }
     }
 
     private void generateNewFruit(SnakeGame snakeGame, int[][] board) {
-
+        System.out.println("Generating new fruit");
         Random random = new Random();
 
         int fruitX;
