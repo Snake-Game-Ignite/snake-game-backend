@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.snakegame.snakegame.model.Cell;
 import com.snakegame.snakegame.model.SnakeGame;
+import com.snakegame.snakegame.controller.Config;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,9 +17,9 @@ public class SnakeGameService {
 
     private int boardSize = 6;
 
-    protected final int[][] board = new int[boardSize][boardSize];
+    protected int[][] board = new int[boardSize][boardSize];
 
-    private static final int INITIAL_SNAKE_LENGTH = 3;
+    private int initialSnakeLength = 3;
 
     private SnakeGame gameState = new SnakeGame(boardSize);
 
@@ -28,8 +29,20 @@ public class SnakeGameService {
 
     public void setBoardSize(int boardSize) {
         this.boardSize = boardSize;
-
     }
+
+    public void setBoard(int boardSize) {
+        this.board = new int[boardSize][boardSize];
+    }
+
+    public int getInitialSnakeLength() {
+        return initialSnakeLength;
+    }
+
+    public void setInitialSnakeLength(int snakeLength) {
+        this.initialSnakeLength = snakeLength;
+    }
+
 
     public SnakeGame getGameStateForPlayer(String playerId) {
         // if there is no snake for that player then we add one.
@@ -40,11 +53,13 @@ public class SnakeGameService {
 
     public SnakeGame getGameState() {
         // if there is no snake for that player then we add one.
-
         return gameState;
     }
 
-    public SnakeGame resetGameState() {
+    public SnakeGame resetGameState(Config config) {
+        setBoardSize(config.getBoardSize());
+        setInitialSnakeLength(config.getinitialSnakeLength());
+        setBoard(boardSize);
         this.gameState = new SnakeGame(boardSize);
         return gameState;
     }
@@ -75,7 +90,7 @@ public class SnakeGameService {
         }
 
         // Generate the initial snake
-        for (int i = 0; i < INITIAL_SNAKE_LENGTH; i++) {
+        for (int i = 0; i < initialSnakeLength; i++) {
             snake.add(new Cell(initialX, initialY + i));
         }
 
