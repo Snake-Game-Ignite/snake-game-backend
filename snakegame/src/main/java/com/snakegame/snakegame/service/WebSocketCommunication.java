@@ -11,8 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.snakegame.snakegame.controller.MoveRequest;
-import com.snakegame.snakegame.model.SnakeGame;
+import com.snakegame.snakegame.model.MoveRequest;
 
 @Component
 public class WebSocketCommunication {

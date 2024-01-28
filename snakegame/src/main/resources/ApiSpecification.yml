@@ -1,0 +1,112 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Snake Game OpenAPI Specification
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /state:
+    get:
+      summary: Get current game state
+      operationId: getGameState
+      responses:
+        200:
+          description: Current game state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameState"
+
+  /reset:
+    post:
+      summary: Reset game with optional config request body
+      operationId: resetGame
+      requestBody:
+        description: Optional configuration for snake game. Can choose 0..M fields from config, Fields missing will be defaulted
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Config'
+      responses:
+        200:
+          description: Current game state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameState"
+  /move:
+    post:
+      summary: Send move request for game
+      operationId: moveRequest
+      requestBody:
+        description: Move player's snake
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveRequest'
+      responses:
+        200:
+          description: Current game state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GameState"
+components:
+  schemas:
+    GameState:
+      properties:
+        gameOver:
+          type: boolean
+        message:
+          type: string
+        snakes:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: "#/components/schemas/Cell"
+        fruits:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
+        isFruitEaten:
+          type: boolean
+        board:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        score:
+          type: object
+          additionalProperties:
+            type: integer
+    Cell:
+      properties:
+        x:
+          type: integer
+        y:
+          type: integer
+    Config:
+      properties:
+        boardSize:
+          type: integer
+        initialSnakeLength:
+          type: integer
+        keepScore:
+          type: boolean
+          description: Keep score between games
+    MoveRequest:
+      required:
+        - playerId
+        - direction
+      properties:
+        playerId:
+          type: string
+        direction:
+          type: integer
+          description: 0 = LEFT, 1 = DOWN, 2 = RIGHT, 3 = UP
