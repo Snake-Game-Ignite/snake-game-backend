@@ -1,10 +1,12 @@
-package com.snakegame.snakegame.controller;
+package com.snakegame.snakegame.model;
 
 public class Config {
 
-    private int boardSize;
+    private int boardSize = 6;
 
-    private int initialSnakeLength;
+    private int initialSnakeLength = 3;
+
+    private boolean keepScore = true;
 
     // Getters and setters
 
@@ -21,6 +23,14 @@ public class Config {
 
     public void setinitialSnakeLength(int initialSnakeLength) {
         this.initialSnakeLength = initialSnakeLength;
+    }
+
+    public boolean getKeepScore() {
+        return keepScore;
+    }
+
+    public void setKeepScore(boolean keepScore) {
+        this.keepScore = keepScore;
     }
 
 }

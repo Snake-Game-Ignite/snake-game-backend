@@ -3,6 +3,9 @@
 1. mvn clean install
 2. Start the app
 
+API contract can be found here:
+snakegame/src/main/resources/ApiSpecification.yml
+
 For the calls:
 
 1. Snake move:
@@ -12,7 +15,7 @@ For the calls:
    - http://localhost:8080/api/snake/state
 4. reset
    - http://localhost:8080/api/snake/reset
-   
+
 
 
    

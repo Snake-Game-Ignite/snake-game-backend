@@ -1,4 +1,4 @@
-package com.snakegame.snakegame.controller;
+package com.snakegame.snakegame.model;
 
 public class MoveRequest {
     private String playerId;

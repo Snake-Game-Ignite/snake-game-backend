@@ -16,13 +16,14 @@ public class SnakeGame {
     private int[][] board;
     private Map<String, Integer> score = new HashMap<>();
 
-    public SnakeGame(int boardSize) {
+    public SnakeGame(int boardSize, Map<String, Integer> score) {
         this.snakes = new HashMap<>();
         this.fruits = new ArrayList<>();
         this.gameOver = false;
         this.message = "";
         this.isFruitEaten = false;
         this.board = new int[boardSize][boardSize];
+        this.score = score;
     }
 
     public int[][] getBoard() {

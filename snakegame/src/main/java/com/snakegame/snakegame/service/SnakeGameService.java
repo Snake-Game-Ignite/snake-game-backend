@@ -4,13 +4,9 @@ import org.springframework.stereotype.Service;
 
 import com.snakegame.snakegame.model.Cell;
 import com.snakegame.snakegame.model.SnakeGame;
-import com.snakegame.snakegame.controller.Config;
+import com.snakegame.snakegame.model.Config;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Collection;
+import java.util.*;
 
 @Service
 public class SnakeGameService {
@@ -21,7 +17,7 @@ public class SnakeGameService {
 
     private int initialSnakeLength = 3;
 
-    private SnakeGame gameState = new SnakeGame(boardSize);
+    private SnakeGame gameState = new SnakeGame(boardSize, new HashMap<>());
 
     public int getBoardSize() {
         return boardSize;
@@ -57,10 +53,13 @@ public class SnakeGameService {
     }
 
     public SnakeGame resetGameState(Config config) {
+        if (config == null) {
+            config = new Config();
+        }
         setBoardSize(config.getBoardSize());
         setInitialSnakeLength(config.getinitialSnakeLength());
         setBoard(boardSize);
-        this.gameState = new SnakeGame(boardSize);
+        this.gameState = new SnakeGame(boardSize, gameState.getScore());
         return gameState;
     }
 
