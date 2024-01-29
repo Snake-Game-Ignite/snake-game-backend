@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.snakegame.snakegame.model.Config;
+import com.snakegame.snakegame.model.MoveRequest;
 import com.snakegame.snakegame.model.SnakeGame;
 import com.snakegame.snakegame.service.SnakeGameService;
 
