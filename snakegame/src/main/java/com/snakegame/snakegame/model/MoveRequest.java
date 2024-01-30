@@ -2,7 +2,7 @@ package com.snakegame.snakegame.model;
 
 public class MoveRequest {
     private String playerId;
-    private int direction;
+    private Integer direction;
 
     // Getters and setters
 
@@ -14,11 +14,11 @@ public class MoveRequest {
         this.playerId = playerId;
     }
 
-    public int getDirection() {
+    public Integer getDirection() {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    public void setDirection(Integer direction) {
         this.direction = direction;
     }
 }

@@ -47,6 +47,7 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
+		sendInvalidMoveToCreatePlayer();
     }
     else {
         $("#conversation").hide();
@@ -101,9 +102,13 @@ function sendMoveDown() {
     ws.send( '{"playerId": "player1", "direction":1}'  );
 }
 
+function sendInvalidMoveToCreatePlayer(){
+	ws.send( '{"playerId": "player1", "direction":null}'  );
+}
+
 
 function showGreeting(message) {
-    $("#greetings").append(" " + message + "");
+    $("#greetings").append("<br/><code>" + message + "</code>");
 }
 
 $(function () {
