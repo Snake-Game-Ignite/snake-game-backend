@@ -1,5 +1,7 @@
 package com.snakegame.snakegame.service;
 
+import com.google.common.eventbus.EventBus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.snakegame.snakegame.model.Cell;
@@ -11,6 +13,8 @@ import java.util.*;
 @Service
 public class SnakeGameService {
 
+    @Autowired
+    private EventBus boardUpdateEventBus;
     private int boardSize = 6;
 
     protected int[][] board = new int[boardSize][boardSize];
@@ -60,6 +64,9 @@ public class SnakeGameService {
         setInitialSnakeLength(config.getinitialSnakeLength());
         setBoard(boardSize);
         this.gameState = new SnakeGame(boardSize, gameState.getScore());
+
+        boardUpdateEventBus.post(this.gameState);
+
         return gameState;
     }
 
@@ -206,6 +213,8 @@ public class SnakeGameService {
 
             // Set the updated board in the SnakeGame instance
             snakeGame.setBoard(board);
+
+            boardUpdateEventBus.post(this.gameState);
         }
     }
 
