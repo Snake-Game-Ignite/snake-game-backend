@@ -103,7 +103,7 @@ function sendMoveDown() {
 }
 
 function sendInvalidMoveToCreatePlayer(){
-	ws.send( '{"playerId": "player1", "direction":-1}'  );
+	ws.send( '{"playerId": "player1", "direction":null}'  );
 }
 
 

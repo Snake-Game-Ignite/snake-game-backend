@@ -24,7 +24,7 @@ For the websocket
 1) connect websocket to ws://localhost:8080/ws
 2) send a move with direction of -1 to create the initial snake for the player 
    ```javascript
-   ws.send( '{"playerId": "player1", "direction":-1}'  );
+   ws.send( '{"playerId": "player1", "direction":null}'  );
    ```
 
 To test:

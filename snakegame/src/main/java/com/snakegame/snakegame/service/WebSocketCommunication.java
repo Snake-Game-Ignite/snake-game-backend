@@ -64,8 +64,8 @@ public class WebSocketCommunication {
     public void received(String payload) throws IOException {
         var moveRequest = gson.fromJson(payload, MoveRequest.class);
         String playerId = moveRequest.getPlayerId();
-        int direction = moveRequest.getDirection();
-        if (direction > -1) {
+        Integer direction = moveRequest.getDirection();
+        if (direction != null) {
             gameService.handleUserInput(playerId, direction);
             broadcast(gameService.getGameState());
         } else {
@@ -75,7 +75,6 @@ public class WebSocketCommunication {
 
     public void disconnect(WebSocketSession session) {
         sessions.remove(session);
-
     }
 
 }
