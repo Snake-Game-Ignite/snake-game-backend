@@ -156,11 +156,7 @@ public class SnakeGameService {
                 snake.removeLast();
             } else if (eatenFruitForPlayer.getOrDefault(playerId, new ArrayList<>()).contains(snake.getLast())) {
                 eatenFruitForPlayer.get(playerId).removeIf(cell -> cell.equals(snake.getLast()));
-            } else if (isFruitStillWithinSnake(snake, eatenFruitForPlayer.getOrDefault(playerId, new ArrayList<>()))){
-                System.out.println("Snake still digesting fruit");
-                snake.removeLast();
             } else {
-                System.out.println("Snake digested fruit");
                 snake.removeLast();
             }
         }
@@ -280,12 +276,6 @@ public class SnakeGameService {
         snakeGame.getFruits().add(new Cell(fruitX, fruitY));
         // Update the board to represent the presence of a fruit (e.g., set to 2)
         board[fruitX][fruitY] = 2;
-    }
-
-    private boolean isFruitStillWithinSnake(LinkedList<Cell> snake, List<Cell> fruit){
-        System.out.printf("%s - %s", snake, fruit);
-
-        return snake.stream().anyMatch(fruit::contains);
     }
 
 }
