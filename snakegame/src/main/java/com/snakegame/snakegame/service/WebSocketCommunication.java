@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,8 +22,27 @@ public class WebSocketCommunication {
 
     private static Gson gson = new GsonBuilder().create();
 
-    @Autowired
-    private SnakeGameService gameService;
+	private final SnakeGameService gameService;
+
+	private final EventBus boardUpdateEventBus;
+
+	public WebSocketCommunication( SnakeGameService gameService, EventBus boardUpdateEventBus) {
+		this.boardUpdateEventBus = boardUpdateEventBus;
+		this.gameService = gameService;
+
+		this.boardUpdateEventBus.register(this);
+	}
+
+	@PreDestroy
+	public void destroy() {
+		boardUpdateEventBus.unregister(this);
+	}
+
+	@Subscribe
+	public void boardUpdated(Object payload) throws IOException {
+		System.out.println(payload);
+		broadcast(payload);
+	}
 
     /**
      * send an object to all websocket receiver
