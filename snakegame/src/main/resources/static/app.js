@@ -103,7 +103,7 @@ function sendMoveDown() {
 
 
 function showGreeting(message) {
-    $("#greetings").append(" " + message + "");
+    $("#greetings").append("<br/><code>" + message + "</code>");
 }
 
 $(function () {
