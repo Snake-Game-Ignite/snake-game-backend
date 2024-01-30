@@ -100,6 +100,9 @@ components:
         keepScore:
           type: boolean
           description: Keep score between games
+        enableSnakeGrowth:
+          type: boolean
+          description: Whether the snake should get longer when it eats fruit
     MoveRequest:
       required:
         - playerId

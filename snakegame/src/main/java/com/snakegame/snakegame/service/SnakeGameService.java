@@ -12,9 +12,12 @@ import java.util.*;
 
 @Service
 public class SnakeGameService {
+    private Map<String, List<Cell>> eatenFruitForPlayer = new HashMap<>();
+    private boolean enableSnakeGrowth = false;
 
     @Autowired
     private EventBus boardUpdateEventBus;
+
     private int boardSize = 6;
 
     protected int[][] board = new int[boardSize][boardSize];
@@ -63,6 +66,8 @@ public class SnakeGameService {
         setBoardSize(config.getBoardSize());
         setInitialSnakeLength(config.getinitialSnakeLength());
         setBoard(boardSize);
+        eatenFruitForPlayer = new HashMap<>();
+        enableSnakeGrowth = config.getEnableSnakeGrowth();
         this.gameState = new SnakeGame(boardSize, gameState.getScore());
 
         boardUpdateEventBus.post(this.gameState);
@@ -104,7 +109,7 @@ public class SnakeGameService {
     }
 
     private boolean isSnakeOccupyingPosition(int x, int y, Collection<LinkedList<Cell>> existingSnakes,
-            List<Cell> fruits) {
+                                             List<Cell> fruits) {
         for (LinkedList<Cell> existingSnake : existingSnakes) {
             if (existingSnake.stream().anyMatch(cell -> cell.getX() == x && cell.getY() == y)) {
                 return true; // Position is occupied by an existing snake
@@ -155,7 +160,14 @@ public class SnakeGameService {
 
             // Move the snake by adding the new head
             snake.addFirst(newHead);
-            snake.removeLast();
+            if(!enableSnakeGrowth){
+                System.out.println("Snake growth not enabled");
+                snake.removeLast();
+            } else if (eatenFruitForPlayer.getOrDefault(playerId, new ArrayList<>()).contains(snake.getLast())) {
+                eatenFruitForPlayer.get(playerId).removeIf(cell -> cell.equals(snake.getLast()));
+            } else {
+                snake.removeLast();
+            }
         }
     }
 
@@ -240,12 +252,21 @@ public class SnakeGameService {
         if (snakeGame.getFruits().removeIf(fruit -> head.getX() == fruit.getX() && head.getY() == fruit.getY())) {
             snakeGame.addScoreForPlayer(playerId);
             snakeGame.setFruitEaten(true);
+            trackEatenFruit(playerId, head);
         }
 
         if (snakeGame.isFruitEaten()) {
             // Fruit has been eaten, generate a new one
             generateNewFruit(snakeGame, board);
             snakeGame.setFruitEaten(false);
+        }
+    }
+
+    private void trackEatenFruit(String playerId, Cell fruitPosition) {
+        if (this.enableSnakeGrowth) {
+            List<Cell> eatenFruit = eatenFruitForPlayer.getOrDefault(playerId, new ArrayList<>());
+            eatenFruit.add(fruitPosition);
+            eatenFruitForPlayer.put(playerId, eatenFruit);
         }
     }
 
