@@ -18,9 +18,9 @@ import com.snakegame.snakegame.model.MoveRequest;
 @Component
 public class WebSocketCommunication {
 
-	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-	
-	private static Gson gson=new GsonBuilder().create();
+    private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+
+    private static Gson gson = new GsonBuilder().create();
 
 	private final SnakeGameService gameService;
 
@@ -43,54 +43,59 @@ public class WebSocketCommunication {
 		System.out.println(payload);
 		broadcast(payload);
 	}
-	
-	/** 
-	 * send an object to all websocket receiver
-	 * @param payload
-	 */
-	public void broadcast(Object payload) throws IOException {
-		TextMessage msg=null;
-		if (payload instanceof String strPayload) {
-			msg=new TextMessage(strPayload);
-		} else {
-			msg=new TextMessage(gson.toJson(payload));
-		}
-		for(var webSocketSession : sessions) {
-			webSocketSession.sendMessage(msg);
-		}
-	}
 
-	/** 
-	 * send an object to a specific session
-	 * @param payload
-	 */
-	public void broadcast(WebSocketSession session, Object payload) throws IOException {
-		TextMessage msg=null;
-		if (payload instanceof String strPayload) {
-			msg=new TextMessage(strPayload);
-		} else {
-			msg=new TextMessage(gson.toJson(payload));
-		}
-		session.sendMessage(msg);
-		
-	}
-	
-	public void connect(WebSocketSession session) throws IOException {
-		sessions.add(session);
-		broadcast ( session, gameService.getGameState() );
-	}
+    /**
+     * send an object to all websocket receiver
+     *
+     * @param payload
+     */
+    public void broadcast(Object payload) throws IOException {
+        TextMessage msg = null;
+        if (payload instanceof String strPayload) {
+            msg = new TextMessage(strPayload);
+        } else {
+            msg = new TextMessage(gson.toJson(payload));
+        }
+        for (var webSocketSession : sessions) {
+            webSocketSession.sendMessage(msg);
+        }
+    }
 
-	public void received(String payload) throws IOException {
-		var moveRequest=gson.fromJson(payload, MoveRequest.class);
+    /**
+     * send an object to a specific session
+     *
+     * @param payload
+     */
+    public void broadcast(WebSocketSession session, Object payload) throws IOException {
+        TextMessage msg = null;
+        if (payload instanceof String strPayload) {
+            msg = new TextMessage(strPayload);
+        } else {
+            msg = new TextMessage(gson.toJson(payload));
+        }
+        session.sendMessage(msg);
+
+    }
+
+    public void connect(WebSocketSession session) throws IOException {
+        sessions.add(session);
+        broadcast(session, gameService.getGameState());
+    }
+
+    public void received(String payload) throws IOException {
+        var moveRequest = gson.fromJson(payload, MoveRequest.class);
         String playerId = moveRequest.getPlayerId();
-        int direction = moveRequest.getDirection();
-        gameService.handleUserInput(playerId, direction);
-        broadcast( gameService.getGameState());	
-	}
+        Integer direction = moveRequest.getDirection();
+        if (direction != null) {
+            gameService.handleUserInput(playerId, direction);
+            broadcast(gameService.getGameState());
+        } else {
+            broadcast(gameService.getGameStateForPlayer(playerId));
+        }
+    }
 
-	public void disconnect(WebSocketSession session) {
-		sessions.remove(session);
-		
-	}
-	
+    public void disconnect(WebSocketSession session) {
+        sessions.remove(session);
+    }
+
 }

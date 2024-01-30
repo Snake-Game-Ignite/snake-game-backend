@@ -47,6 +47,7 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
+		sendInvalidMoveToCreatePlayer();
     }
     else {
         $("#conversation").hide();
@@ -99,6 +100,10 @@ function sendMoveUp() {
 
 function sendMoveDown() {
     ws.send( '{"playerId": "player1", "direction":1}'  );
+}
+
+function sendInvalidMoveToCreatePlayer(){
+	ws.send( '{"playerId": "player1", "direction":null}'  );
 }
 
 
