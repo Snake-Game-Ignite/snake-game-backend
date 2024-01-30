@@ -8,6 +8,8 @@ public class Config {
 
     private boolean keepScore = true;
 
+    private boolean enableSnakeGrowth = false;
+
     // Getters and setters
 
     public int getBoardSize() {
@@ -31,6 +33,14 @@ public class Config {
 
     public void setKeepScore(boolean keepScore) {
         this.keepScore = keepScore;
+    }
+
+    public boolean getEnableSnakeGrowth() {
+        return enableSnakeGrowth;
+    }
+
+    public void setEnableSnakeGrowth(boolean enableSnakeGrowth) {
+        this.enableSnakeGrowth = enableSnakeGrowth;
     }
 
 }
