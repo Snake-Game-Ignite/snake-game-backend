@@ -25,9 +25,9 @@ replay_pid*
 
 
 #build folder
-target/
-bin/
-.settings/
+**/target/
+**/bin/
+**/.settings/
 **/.classpath
 **/.proect
 **/.factorypath
