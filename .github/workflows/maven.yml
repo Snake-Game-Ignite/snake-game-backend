@@ -8,6 +8,10 @@
 
 name: Java CI with Maven
 
+defaults:
+  run:
+    working-directory: snakegame
+
 on:
   push:
     branches: [ "main" ]
