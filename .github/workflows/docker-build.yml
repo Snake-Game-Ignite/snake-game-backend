@@ -38,7 +38,6 @@ jobs:
           latest=auto
         tags: |
           type=sha
-          type=ref
         images: ghcr.io/Snake-Game-Ignite/snake-game-backend
 
     - name: Set up QEMU
