@@ -58,5 +58,5 @@ jobs:
       with:
         tags: ${{ steps.meta.outputs.tags }}
         file: ./snakegame/Dockerfile
-        build-args: JAR_FILE=./target/*.jar
+        build-args: JAR_FILE=./snakegame/target/*.jar
         push: true
