@@ -31,13 +31,15 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Docker meta
-      id: docker_meta
-      uses: crazy-max/ghaction-docker-meta@v1
+      id: meta
+      uses: docker/metadata-action@v5
       with:
+        flavor: |
+          latest=auto
+        tags: |
+          type=sha
+          type=ref
         images: ghcr.io/Snake-Game-Ignite/snake-game-backend
-        tag-sha: true
-        tag-edge: false
-        tag-latest: true
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -55,7 +57,7 @@ jobs:
     - name: Build image
       uses: docker/build-push-action@v5
       with:
-        tags: ${{ steps.docker_meta.outputs.tags }}
+        tags: ${{ steps.meta.outputs.tags }}
         file: ./snakegame/Dockerfile
         build-args: JAR_FILE=./snakegame/target/*.jar
         push: true
