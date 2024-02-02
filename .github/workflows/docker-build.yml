@@ -12,8 +12,10 @@ defaults:
   run:
     working-directory: snakegame
 
-on: push
-
+on:
+  push:
+    branches: [ "main" ]
+    
 jobs:
   build:
 
@@ -27,9 +29,7 @@ jobs:
         java-version: '17'
         distribution: 'corretto'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-
+        
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
@@ -57,7 +57,10 @@ jobs:
     - name: Build image
       uses: docker/build-push-action@v5
       with:
+        push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
         tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
         file: ./snakegame/Dockerfile
         build-args: JAR_FILE=./snakegame/target/*.jar
-        push: true
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
