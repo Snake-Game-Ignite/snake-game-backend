@@ -48,7 +48,7 @@ jobs:
       with:
         name: jar-file
         path: app.jar
-        
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
@@ -79,6 +79,6 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        context: ./snakegame
+        context: ./
         cache-from: type=gha
         cache-to: type=gha,mode=max
