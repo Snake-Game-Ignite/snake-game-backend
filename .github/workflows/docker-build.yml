@@ -12,11 +12,7 @@ defaults:
   run:
     working-directory: snakegame
 
-on:
-  push:
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "main" ]
+on: push
 
 jobs:
   build:
