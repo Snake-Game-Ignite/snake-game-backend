@@ -73,7 +73,7 @@ jobs:
         password: ${{ secrets.GHCR_TOKEN }}
 
     - name: Copy Jar file
-      run: mv target/*.jar app.jar
+      run: mv target/$(ls target) app.jar
 
     - uses: actions/upload-artifact@master
       with:
