@@ -1,4 +1,4 @@
-FROM amazoncorretto:17-alpine-jdk
+FROM eclipse-temurin:17-alpine
 
 RUN mkdir /app
 
