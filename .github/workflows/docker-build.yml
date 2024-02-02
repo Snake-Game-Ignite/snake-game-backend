@@ -48,6 +48,7 @@ jobs:
       with:
         name: jar-file
         path: app.jar
+        
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
@@ -71,14 +72,6 @@ jobs:
         registry: ghcr.io
         username: ChrsKng
         password: ${{ secrets.GHCR_TOKEN }}
-
-    - name: Copy Jar file
-      run: mv target/$(ls target) app.jar
-
-    - uses: actions/upload-artifact@master
-      with:
-        name: jar-file
-        path: app.jar
 
     - name: Build image
       uses: docker/build-push-action@v5
