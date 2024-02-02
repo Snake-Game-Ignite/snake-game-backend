@@ -56,6 +56,6 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         tags: ${{ steps.docker_meta.outputs.tags }}
-        file: ./Dockerfile
-        build-args: JAR_FILE=target/*.jar
+        file: ./snakegame/Dockerfile
+        build-args: JAR_FILE=./snakegame/target/*.jar
         push: true
