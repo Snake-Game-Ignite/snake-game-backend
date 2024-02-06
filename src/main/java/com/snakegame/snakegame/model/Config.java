@@ -2,7 +2,7 @@ package com.snakegame.snakegame.model;
 
 public class Config {
 
-    private int boardSize = 50;
+    private int boardSize = 20;
 
     private int initialSnakeLength = 3;
 

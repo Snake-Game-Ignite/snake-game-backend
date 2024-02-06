@@ -19,7 +19,7 @@ public class SnakeGameService {
     @Autowired
     private EventBus boardUpdateEventBus;
 
-    private int boardSize = 50;
+    private int boardSize = 20;
 
     protected int[][] board = new int[boardSize][boardSize];
 
@@ -209,6 +209,7 @@ public class SnakeGameService {
     private void endGame(SnakeGame snakeGame, String message) {
         snakeGame.setGameOver(true);
         snakeGame.setMessage(message);
+        resetGameState(null);
         // Additional logic for ending the game
     }
 

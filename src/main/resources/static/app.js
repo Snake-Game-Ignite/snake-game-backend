@@ -1,5 +1,5 @@
 let tileSize=32
-let boardSize=50
+let boardSize=20
 
 function connect() {
 	ws = new WebSocket('ws://localhost:8080/ws');
