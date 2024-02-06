@@ -31,6 +31,12 @@ public class SnakeGameController {
         return ResponseEntity.ok(updatedGameState);
     }
 
+    @GetMapping("/restart")
+    public ResponseEntity<SnakeGame> restart() {
+        SnakeGame updatedGameState = snakeGameService.resetGameState(new Config());
+        return ResponseEntity.ok(updatedGameState);
+    }
+
     @PostMapping("/reset")
     public ResponseEntity<SnakeGame> reset(@RequestBody Config config) {
         SnakeGame updatedGameState = snakeGameService.resetGameState(config);

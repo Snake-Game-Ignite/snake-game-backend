@@ -2,13 +2,13 @@ package com.snakegame.snakegame.model;
 
 public class Config {
 
-    private int boardSize = 6;
+    private int boardSize = 50;
 
     private int initialSnakeLength = 3;
 
     private boolean keepScore = true;
 
-    private boolean enableSnakeGrowth = false;
+    private boolean enableSnakeGrowth = true;
 
     // Getters and setters
 
