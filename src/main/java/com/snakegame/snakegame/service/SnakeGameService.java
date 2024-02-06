@@ -1,6 +1,7 @@
 package com.snakegame.snakegame.service;
 
 import com.google.common.eventbus.EventBus;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class SnakeGameService {
     @Autowired
     private EventBus boardUpdateEventBus;
 
-    private int boardSize = 6;
+    private int boardSize = 50;
 
     protected int[][] board = new int[boardSize][boardSize];
 
@@ -46,6 +47,13 @@ public class SnakeGameService {
         this.initialSnakeLength = snakeLength;
     }
 
+    @PostConstruct
+    public void init() {
+        // Your initialization code goes here
+        // This method will be called after the bean is constructed and dependencies are injected
+        resetGameState(null);
+    }
+
 
     public SnakeGame getGameStateForPlayer(String playerId) {
         // if there is no snake for that player then we add one.
@@ -69,7 +77,8 @@ public class SnakeGameService {
         eatenFruitForPlayer = new HashMap<>();
         enableSnakeGrowth = config.getEnableSnakeGrowth();
         this.gameState = new SnakeGame(boardSize, gameState.getScore());
-
+        initializeGame("android", gameState);
+        initializeGame("ios", gameState);
         boardUpdateEventBus.post(this.gameState);
 
         return gameState;
