@@ -25,7 +25,7 @@ public class SnakeGameService {
 
     private int initialSnakeLength = 3;
 
-    private SnakeGame gameState = new SnakeGame(boardSize, new HashMap<>());
+    private SnakeGame gameState = new SnakeGame(boardSize, new HashMap<>(), new HashMap<>());
 
     public int getBoardSize() {
         return boardSize;
@@ -76,7 +76,7 @@ public class SnakeGameService {
         setBoard(boardSize);
         eatenFruitForPlayer = new HashMap<>();
         enableSnakeGrowth = config.getEnableSnakeGrowth();
-        this.gameState = new SnakeGame(boardSize, gameState.getScore());
+        this.gameState = new SnakeGame(boardSize, gameState.getScore(), gameState.getDeaths());
         initializeGame("android", gameState);
         initializeGame("ios", gameState);
         boardUpdateEventBus.post(this.gameState);
@@ -186,11 +186,13 @@ public class SnakeGameService {
 
         // Check for collisions with the board boundaries
         if (head.getX() < 0 || head.getX() >= boardSize || head.getY() < 0 || head.getY() >= boardSize) {
+            snakeGame.addDeathForPlayer(playerId);
             endGame(snakeGame, "Game Over for " + playerId + " - Snake collided with the board boundary!");
         }
 
         // Check for collisions with the snake's own body
         if (snake.size() > 1 && snake.subList(1, snake.size()).contains(head)) {
+            snakeGame.addDeathForPlayer(playerId);
             endGame(snakeGame, "Game Over for " + playerId + " - Snake collided with its own body!");
         }
 
@@ -200,6 +202,7 @@ public class SnakeGameService {
             if (!otherPlayerId.equals(playerId)) {
                 LinkedList<Cell> otherSnake = entry.getValue();
                 if (otherSnake.contains(head)) {
+                    snakeGame.addDeathForPlayer(playerId);
                     endGame(snakeGame, "Game Over for " + playerId + " - Snake collided with another snake!");
                 }
             }

@@ -15,8 +15,9 @@ public class SnakeGame {
     private boolean isFruitEaten;
     private int[][] board;
     private Map<String, Integer> score = new HashMap<>();
+    private Map<String, Integer> deaths = new HashMap<>();
 
-    public SnakeGame(int boardSize, Map<String, Integer> score) {
+    public SnakeGame(int boardSize, Map<String, Integer> score, Map<String, Integer> deaths) {
         this.snakes = new HashMap<>();
         this.fruits = new ArrayList<>();
         this.gameOver = false;
@@ -24,6 +25,7 @@ public class SnakeGame {
         this.isFruitEaten = false;
         this.board = new int[boardSize][boardSize];
         this.score = score;
+        this.deaths = deaths;
     }
 
     public int[][] getBoard() {
@@ -42,6 +44,20 @@ public class SnakeGame {
             score.put(player, newScore);
         } else {
             score.put(player, 1);
+        }
+    }
+
+    public int getPlayerDeaths(String playerId) {
+        return deaths.get(playerId);
+    }
+
+    public void addDeathForPlayer(String player) {
+        if (deaths.containsKey(player)) {
+            int playerCurrentDeaths = deaths.get(player);
+            int newDeaths = playerCurrentDeaths + 1;
+            deaths.put(player, newDeaths);
+        } else {
+            deaths.put(player, 1);
         }
     }
 
@@ -83,6 +99,10 @@ public class SnakeGame {
 
     public Map<String, Integer> getScore() {
         return score;
+    }
+
+    public Map<String, Integer> getDeaths() {
+        return deaths;
     }
 
 }
